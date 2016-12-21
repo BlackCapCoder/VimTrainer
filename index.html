@@ -44,6 +44,10 @@ and press x to delete it.
 </div>
 
 <div style="display: none;">
+<pre id="p0"></pre>
+<pre id="t0"></pre>
+<pre id="s0"></pre>
+
 <pre id="p1">Hi, this is an interactive vim tutorial!
 To begin, move the cursor to the star bellow using hjkl or the arrow keys,
 and press x to delete it.
@@ -59,6 +63,32 @@ and press x to delete it.
 G - Move the cursor to the bottom of the file
 $ - Move the cursor to the end of the line
 x - Delete the character under the cursor</pre>
+
+
+<pre id="p2">Delete the star in * the middle of this sentence
+
+You can press w to go to the next word, and b to go back again</pre>
+<pre id="t2">Delete the star in  the middle of this sentence
+
+You can press w to go to the next word, and b to go back again</pre>
+<pre id="s2">f*x
+
+f* - find *
+x  - Delete the character under the cursor</pre>
+
+
+<pre id="p3">Emacs
+
+Yikes, a bad word
+Delete it!</pre>
+<pre id="t3">
+
+Yikes, a bad word
+Delete it!</pre>
+<pre id="s3">dw
+
+d - delete
+w - word</pre>
 </div>
 
 <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -80,6 +110,7 @@ x - Delete the character under the cursor</pre>
     var keyCount = 0;
     var userSol = "";
     var currentLevel = 1;
+    var maxLevelSolved = 0;
 
     var tb = document.querySelector('.ace_text-input');
     var kp = document.querySelector('#keypresses');
@@ -108,11 +139,41 @@ x - Delete the character under the cursor</pre>
       editor.selection.moveTo(0,0);
     }
 
-editor.on("change", function() {
-  var sol = document.getElementById('t'+currentLevel).innerText;
-  if (editor.getValue() != sol) return;
-  showSolution(currentLevel);
-});
+    editor.on("change", function() {
+      var sol = document.getElementById('t'+currentLevel).innerText;
+      if (editor.getValue() != sol) return;
+      showSolution(currentLevel);
+      maxLevelSolved = currentLevel;
+    });
+
+    function resetLevel () {
+      keyCount = 0;
+      kp.innerText = 0;
+      userSol = "";
+      editor.setValue(document.getElementById('p'+currentLevel).innerText);
+      editor.selection.moveTo(0,0);
+    }
+
+    function nextLevel () {
+      if (currentLevel>maxLevelSolved) return;
+      keyCount = 0;
+      kp.innerText = 0;
+      userSol = "";
+      currentLevel++;
+      editor.setValue(document.getElementById('p'+currentLevel).innerText);
+      editor.selection.moveTo(0,0);
+    }
+
+    ace.config.loadModule("ace/keyboard/vim", function(m) {
+        var VimApi = ace.require("ace/keyboard/vim").CodeMirror.Vim
+        VimApi.defineEx("restart", "r", function(cm, input) {
+            //cm.ace.execCommand("save")
+            resetLevel();
+        });
+        VimApi.defineEx("next", "n", function(cm, input) {
+            nextLevel();
+        });
+    });
 </script>
 
 </body>
