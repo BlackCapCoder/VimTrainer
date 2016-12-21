@@ -91,7 +91,8 @@ x - Delete the character under the cursor</pre>
       || e.key == "Meta") return;
 
       kp.innerText = ++keyCount;
-      userSol += e.key;
+      userSol += (e.controlDown? '^': '')
+               + (e.key.length>1? '<'+e.key+'>': e.key);
     });
 
     var c = document.querySelector('.ace_content');
