@@ -12,20 +12,54 @@
         margin: 0;
         position: absolute;
         top: 0;
-        bottom: 0;
+        bottom: 0px;
         left: 0;
         right: 0;
+    }
+    #status-line {
+      position: absolute;
+      bottom: 0;
+      right: 5px;
+      height: 25px;
+      z-index: 4;
+      color: white;
+      font: monospace;
+      font-size: 13px;
+    }
+    #status-line span {
+      padding-top: 3px;
+      display: inline-block;
     }
   </style>
 </head>
 <body>
 
-<pre id="editor">function foo(items) {
-    var i;
-    for (i = 0; i &lt; items.length; i++) {
-        alert("Ace Rocks " + items[i]);
-    }
-}</pre>
+<pre id="editor">Hi, this is an interactive vim tutorial!
+To begin, move the cursor to the star bellow using hjkl or the arrow keys,
+and press x to delete it.
+
+---> *</pre>
+<div id="status-line">
+<span>Keypresses:</span> <span id="keypresses">0</span>
+</div>
+
+<div style="display: none;">
+<pre id="p1">Hi, this is an interactive vim tutorial!
+To begin, move the cursor to the star bellow using hjkl or the arrow keys,
+and press x to delete it.
+
+---> *</pre>
+<pre id="t1">Hi, this is an interactive vim tutorial!
+To begin, move the cursor to the star bellow using hjkl or the arrow keys,
+and press x to delete it.
+
+---> </pre>
+<pre id="s1">G$x
+
+G - Move the cursor to the bottom of the file
+$ - Move the cursor to the end of the line
+x - Delete the character under the cursor</pre>
+</div>
 
 <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="src-noconflict/ext-language_tools.js"></script>
@@ -34,13 +68,50 @@
 
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/twilight");
-    editor.session.setMode("ace/mode/javascript");
+    /* editor.session.setMode("ace/mode/javascript"); */
     editor.setKeyboardHandler("ace/keyboard/vim");
     editor.setOptions({
         enableBasicAutocompletion: true
       , enableSnippets: false
-      , enableLiveAutocompletion: true
+      , enableLiveAutocompletion: false
     });
+    editor.focus();
+
+    var keyCount = 0;
+    var userSol = "";
+    var currentLevel = 1;
+
+    var tb = document.querySelector('.ace_text-input');
+    var kp = document.querySelector('#keypresses');
+    tb.addEventListener ('keydown', function (e) {
+    if ( e.key == "Shift"
+      || e.key == "Control"
+      || e.key == "Alt"
+      || e.key == "AltGraph"
+      || e.key == "Meta") return;
+
+      kp.innerText = ++keyCount;
+      userSol += e.key;
+    });
+
+    var c = document.querySelector('.ace_content');
+    c.addEventListener ('mousedown', function (e) {
+      e.stopPropagation ();
+      editor.focus();
+      return false;
+    });
+
+    function showSolution (id) {
+      var sel = document.getElementById("s"+id);
+      editor.setValue ("Congratulations, you solved the level!\nYour solution: " + userSol + "\n\n\nBest known solution: " + sel.innerText + "\n\n\n:r to restart the level\n:n to go to the next one", 0);
+      editor.selection.moveTo(0,0);
+    }
+
+editor.on("change", function() {
+  var sol = document.getElementById('t'+currentLevel).innerText;
+  if (editor.getValue() != sol) return;
+  showSolution(currentLevel);
+});
 </script>
 
 </body>
