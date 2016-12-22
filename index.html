@@ -91,8 +91,8 @@ Please correct it by changing "Emacs" to "Vim"
 (You can enter text in insert mode. One way to get to insert mode is by pressing i. To leave insert mode, press Escape)</pre>
 <pre id="s3">fEcwVim
 
-fE - find E
-cw - change word (remove the word under the cursor and enter insert mode)
+fE  - find E
+cw  - change word (remove the word under the cursor and enter insert mode)
 Vim - Literally write "Vim" because we are in insert mode
 
 
@@ -113,13 +113,54 @@ recommending things. Try Vim today!
 Oh boy, they aren't giving up without a fight, are they?</pre>
 <pre id="s4">*cwVim&lt;Escape&gt;n.n.n.
 
-* - Search for the word under the cursor (Emacs)
-cw - change word
-Vim - Type Vim
+*        - Search for the word under the cursor (Emacs)
+cw       - change word
+Vim      - Type Vim
 &lt;Escape&gt; - Leave insert mode
-n - next search result
-. - repeat the last edit (change the word under the cursor to Vim)
+n        - next search result
+.        - repeat the last edit (change the word under the cursor to Vim)
 n.n.</pre>
+
+
+<pre id="p5">The quick brown fox jumps over the lazy dog.
+
+Swap the adjectives</pre>
+<pre id="t5">The lazy brown fox jumps over the quick dog.
+
+Swap the adjectives</pre>
+<pre id="s5">wdwflviwp0wP
+
+w   - go to the next word
+dw  - delete word under cursor (quick)
+fl  - find l
+viw - visually select in word
+p   - paste whatever is in the buffer (quick), replacing the selection
+0   - go to the beginning of the line
+w   - go to the next word (brown)
+P   - paste whatever is in the buffer (lazy) behind the cursor
+
+Alternate solutions: (12) wdwflvwhpFbP
+                     (13) wcwlazy&lt;Escape&gt;*viwp
+In real vim:         (11) wcwl&lt;C-n&gt;&lt;Escape&gt;*viwp</pre>
+
+
+<pre id="p6">Roses are red,
+Mud is fun,
+Violets are blue,
+I have a car,
+Clocks tell time,
+Sugar is sweet
+And so are you.</pre>
+<pre id="t6">Roses are red,
+Violets are blue,
+Sugar is sweet
+And so are you.</pre>
+<pre id="s6">jddjdj
+
+j  - Move the cursor down
+dd - Delete current line
+j  - Move the cursor down
+dj - Delete downwards, removing the current and the next line</pre>
 </div>
 
 <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
